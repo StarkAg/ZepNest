@@ -1,0 +1,18 @@
+# System and editor files
+.DS_Store
+**/.DS_Store
+
+# Dependencies and local deployment metadata
+node_modules/
+**/node_modules/
+.vercel/
+**/.vercel/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Local reference material and duplicate archive
+IMG_*.PNG
+vendor-app-develop.zip
