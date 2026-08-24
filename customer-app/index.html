@@ -91,6 +91,11 @@ const FA_MAP = {
   Zap:          'fa-bolt',          Droplet:      'fa-droplet',
   Tool:         'fa-screwdriver-wrench', Sparkles: 'fa-wand-magic-sparkles',
   Wifi:         'fa-wifi',
+  Scissors:     'fa-scissors',      Hand:         'fa-hand',
+  Smile:        'fa-face-smile',    Wind:         'fa-wind',
+  Percent:      'fa-percent',       Gift:         'fa-gift',
+  Wrench:       'fa-wrench',        Package:      'fa-box',
+  Grid:         'fa-table-cells',
 };
 
 function LIcon({ name, size = 20, color = 'currentColor', strokeWidth, style }) {
@@ -390,7 +395,8 @@ function PayBillRow({ label, value, strikeVal, green }) {
 }
 
 // ── Payment ──────────────────────────────────────────────
-function PaymentScreen({ onNav }) {
+function PaymentScreen({ onNav, data }) {
+  const backTo = (data && data.backTo) || 'home';
   const [sel, setSel]       = React.useState(null);
   const [billOpen, setBill] = React.useState(false);
   const [upiId, setUpiId]   = React.useState('');
@@ -414,7 +420,7 @@ function PaymentScreen({ onNav }) {
   return (
     <div style={{ height:'100%', background:ZEP.bg, display:'flex', flexDirection:'column', position:'relative', fontFamily:FONT }}>
 
-      <ZepBackHeader title="Payment" onBack={() => onNav('orderDetail')} />
+      <ZepBackHeader title="Payment" onBack={() => onNav(backTo)} />
 
       {/* To-pay strip */}
       <div style={{ background:ZEP.surface, flexShrink:0, padding:'10px 16px', display:'flex', alignItems:'center', justifyContent:'space-between', borderBottom:`1px solid ${ZEP.divider}` }}>
@@ -632,7 +638,7 @@ function ConfirmationScreen({ onNav }) {
           <button onClick={() => onNav('orderDetail')} style={{ padding:'15px', borderRadius:9999, border:'none', background:ZEP.primary, color:'#fff', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:FONT, width:'100%' }}>
             View Booking
           </button>
-          <button onClick={() => onNav('payment')} style={{ padding:'15px', borderRadius:9999, border:`1.5px solid ${ZEP.border}`, background:ZEP.surface, color:ZEP.text, fontSize:15, fontWeight:600, cursor:'pointer', fontFamily:FONT, width:'100%' }}>
+          <button onClick={() => onNav('home')} style={{ padding:'15px', borderRadius:9999, border:`1.5px solid ${ZEP.border}`, background:ZEP.surface, color:ZEP.text, fontSize:15, fontWeight:600, cursor:'pointer', fontFamily:FONT, width:'100%' }}>
             Back to Home
           </button>
         </div>
@@ -657,7 +663,7 @@ function OrderDetailScreen({ onNav, tweakStep = 2 }) {
 
   return (
     <div style={{ height:'100%', background:ZEP.bg, display:'flex', flexDirection:'column', position:'relative', fontFamily:FONT }}>
-      <ZepBackHeader title="Order Details" onBack={() => onNav('notifications')}
+      <ZepBackHeader title="Order Details" onBack={() => onNav('bookings')}
         rightSlot={
           <button style={{ background:ZEP.inputFill, border:'none', borderRadius:9999, padding:'8px 16px', fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:FONT, color:ZEP.text }}>Help</button>
         }
@@ -930,7 +936,7 @@ function PostRatingScreen({ onNav, tweakPositive = true }) {
           </div>
         )}
 
-        <button onClick={() => onNav('payment')} style={{ width:'100%', padding:'15px', borderRadius:9999, border:`1.5px solid ${ZEP.border}`, background:ZEP.surface, color:ZEP.text, fontSize:15, fontWeight:600, cursor:'pointer', fontFamily:FONT }}>
+        <button onClick={() => onNav('home')} style={{ width:'100%', padding:'15px', borderRadius:9999, border:`1.5px solid ${ZEP.border}`, background:ZEP.surface, color:ZEP.text, fontSize:15, fontWeight:600, cursor:'pointer', fontFamily:FONT }}>
           Back to Home
         </button>
       </div>
@@ -958,9 +964,9 @@ function PropertyComingSoonScreen({ onNav }) {
   ];
   return (
     <div style={{ height:'100%', background:ZEP.surface, display:'flex', flexDirection:'column', position:'relative', fontFamily:FONT }}>
-      <ZepBackHeader title="Property Management" onBack={() => onNav('notifications')} />
+      <ZepBackHeader title="Property Management" onBack={() => onNav('home')} />
 
-      <div style={{ flex:1, overflowY:'auto', paddingBottom:100 }}>
+      <div style={{ flex:1, overflowY:'auto', paddingBottom:200 }}>
         {/* Hero */}
         <div style={{ display:'flex', flexDirection:'column', alignItems:'center', padding:'36px 24px 24px', textAlign:'center' }}>
           <div style={{ width:100, height:100, borderRadius:28, background:ZEP.primaryLight, display:'flex', alignItems:'center', justifyContent:'center', marginBottom:20 }}>
@@ -996,8 +1002,8 @@ function PropertyComingSoonScreen({ onNav }) {
         </div>
       </div>
 
-      <div style={{ position:'absolute', bottom:0, left:0, right:0, padding:'14px 16px 28px', background:ZEP.surface, boxShadow:'0 -4px 20px rgba(0,0,0,0.08)' }}>
-        <button style={{ width:'100%', padding:'15px', borderRadius:9999, border:'none', background:ZEP.primary, color:'#fff', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:FONT }}>
+      <div style={{ position:'absolute', bottom:92, left:0, right:0, padding:'0 16px', zIndex:50 }}>
+        <button style={{ width:'100%', padding:'15px', borderRadius:9999, border:'none', background:ZEP.primary, color:'#fff', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:FONT, boxShadow:'0 8px 24px rgba(0,0,0,0.18)' }}>
           Notify me when it's ready
         </button>
       </div>
@@ -1056,7 +1062,7 @@ function NotificationsScreen({ onNav }) {
   return (
     <div style={{ height:'100%', background:ZEP.bg, display:'flex', flexDirection:'column', fontFamily:FONT }}>
       <ZepBackHeader title="Notifications"
-        onBack={() => onNav('payment')}
+        onBack={() => onNav('profile')}
         rightSlot={unreadCount > 0 && (
           <span style={{ fontSize:12, fontWeight:600, color:ZEP.primary, cursor:'pointer' }}>
             Mark all read
@@ -1329,7 +1335,7 @@ function AlertDemoScreen({ onNav }) {
 
   return (
     <div style={{ height:'100%', background:ZEP.bg, display:'flex', flexDirection:'column', position:'relative', fontFamily:FONT }}>
-      <ZepBackHeader title="Alert Components" onBack={() => onNav('payment')} />
+      <ZepBackHeader title="Alert Components" onBack={() => onNav('home')} />
 
       <div style={{ flex:1, overflowY:'auto', padding:'14px 16px' }}>
         <div style={{ fontSize:13, color:ZEP.textSec, marginBottom:16, lineHeight:1.6 }}>
@@ -1504,20 +1510,19 @@ function ProjBanner({ title, sub, cta = 'Get quote', rating, asset, onClick }) {
 
 function ProjectCarouselCard({ title, sub, rating, img, onClick }) {
   return (
-    <div onClick={onClick} style={{
-      width: 260, flexShrink: 0, borderRadius: 14, overflow: 'hidden',
-      background: ZEP.surface, border: `1px solid ${ZEP.border}`,
-      boxShadow: '0 2px 8px rgba(0,0,0,0.08)', cursor: 'pointer',
-    }}>
+    <div onClick={onClick} style={{ width: 260, flexShrink: 0, cursor: 'pointer', overflow: 'hidden', borderRadius: 14, background: ZEP.surface, border: `1px solid ${ZEP.border}`, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
       <div style={{ height: 142, position: 'relative', overflow: 'hidden', background: ZEP.bg }}>
         <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent 48%, rgba(0,0,0,0.28) 100%)' }} />
-        <div style={{ position: 'absolute', top: 9, right: 9, background: '#fff', borderRadius: 999, padding: '4px 7px', fontSize: 11, fontWeight: 700, color: ZEP.text, fontFamily: FONT }}>★ {rating}</div>
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0) 44%, rgba(0,0,0,0.42) 100%)' }} />
+        <div style={{ position: 'absolute', right: 10, bottom: 9, display: 'flex', alignItems: 'center', gap: 3, borderRadius: 999, padding: '3px 7px', background: 'rgba(255,255,255,0.95)' }}>
+          <span style={{ color: '#FAC775', fontSize: 11, lineHeight: 1 }}>★</span>
+          <span style={{ color: ZEP.text, fontSize: 11, fontWeight: 700, fontFamily: FONT }}>{rating}</span>
+        </div>
       </div>
       <div style={{ padding: '11px 12px 12px' }}>
-        <div style={{ color: ZEP.text, fontFamily: FONT, fontSize: 14, fontWeight: 700, lineHeight: 1.25 }}>{title}</div>
-        <div style={{ color: ZEP.textSec, fontFamily: FONT, fontSize: 11, lineHeight: 1.35, marginTop: 4, minHeight: 30 }}>{sub}</div>
-        <div style={{ color: ZEP.primary, fontFamily: FONT, fontSize: 12, fontWeight: 700, marginTop: 9 }}>Get quote</div>
+        <div style={{ fontSize: 14, lineHeight: 1.3, fontWeight: 700, color: ZEP.text, fontFamily: FONT }}>{title}</div>
+        <div style={{ minHeight: 30, marginTop: 4, fontSize: 11, lineHeight: 1.35, color: ZEP.textSec, fontFamily: FONT }}>{sub}</div>
+        <div style={{ marginTop: 10, display: 'inline-flex', alignItems: 'center', borderRadius: 8, padding: '7px 11px', background: ZEP.primary, color: '#fff', fontSize: 11, fontWeight: 700, fontFamily: FONT }}>Get quote</div>
       </div>
     </div>
   );
@@ -1542,6 +1547,10 @@ const SERVICE_CARD_PLACEHOLDER = 'assets/service-cards/placeholder.svg';
 // struck-through original price, and an outlined Add button with an optional
 // "N options" caption centered underneath it (own brand color, not UC's violet).
 function SvcRailCard({ name, img, rating, reviews, price, startsAt, strikePrice, options, onAdd, onClick }) {
+  function handleAddClick(e) {
+    e.stopPropagation();
+    onAdd && onAdd();
+  }
   return (
     <div onClick={onClick} style={{ width: 156, flexShrink: 0, cursor: 'pointer' }}>
       <div style={{ width: '100%', aspectRatio: '1 / 1', borderRadius: 14, overflow: 'hidden', background: '#EBEBEB' }}>
@@ -1553,7 +1562,7 @@ function SvcRailCard({ name, img, rating, reviews, price, startsAt, strikePrice,
         />
       </div>
       <div style={{
-        fontSize: 15, fontWeight: 700, color: ZEP.text, fontFamily: FONT, marginTop: 10, lineHeight: 1.25,
+        fontSize: 15, fontWeight: 700, color: ZEP.text, fontFamily: FONT, marginTop: 10, lineHeight: 1.25, minHeight: 38,
         display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
       }}>{name}</div>
       {rating && (
@@ -1579,11 +1588,10 @@ function SvcRailCard({ name, img, rating, reviews, price, startsAt, strikePrice,
           )}
         </div>
         <div style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-          <div onClick={(e) => { e.stopPropagation(); onAdd && onAdd(); }} style={{
+          <div onClick={handleAddClick} style={{
             border: `1px solid ${ZEP.border}`, borderRadius: 11, padding: '9px 20px',
             fontSize: 15, fontWeight: 700, color: ZEP.primary, fontFamily: FONT, background: '#fff',
           }}>Add</div>
-          {options && <div style={{ fontSize: 11, color: ZEP.textSec, fontFamily: FONT }}>{options} options</div>}
         </div>
       </div>
     </div>
@@ -1909,8 +1917,8 @@ function HomeScreen({ onNav }) {
           <HRail>
             <SvcRailCard
               name="Electrician" rating="4.8" reviews="856K"
-              price="₹299/hr" startsAt options={4}
-              img="assets/service-cards/electrician-fixture-repair.png"
+              price="₹299" startsAt options={4}
+              img="assets/service-cards/electrician.png"
               onClick={() => onNav('serviceHourly')} onAdd={() => onNav('serviceHourly')}
             />
             <SvcRailCard
@@ -1925,6 +1933,80 @@ function HomeScreen({ onNav }) {
               img="assets/service-cards/bathroom-deep-clean.png"
               onClick={() => onNav('serviceHourly')} onAdd={() => onNav('serviceHourly')}
             />
+            <SvcRailCard
+              name="Salon Royale — Grooming" rating="4.86" reviews="1.2M"
+              price="₹758" startsAt options={5}
+              img="assets/service-cards/salon-grooming-premium.png"
+              onClick={() => onNav('servicePackage')} onAdd={() => onNav('servicePackage')}
+            />
+          </HRail>
+        </div>
+
+        {/* New & Noteworthy — fresh launches / seasonal pushes */}
+        <div style={{ background: ZEP.surface, marginBottom: 8, paddingBottom: 4 }}>
+          <SHead title="New & noteworthy" onCta={() => onNav('serviceFixed')} />
+          <HRail>
+            <SvcRailCard
+              name="AC Deep Clean + 3-yr Warranty" rating="4.9" reviews="41K"
+              price="₹1,299" startsAt
+              img="assets/service-cards/ac-deep-clean-warranty.png"
+              onClick={() => onNav('serviceFixed')} onAdd={() => onNav('serviceFixed')}
+            />
+            <SvcRailCard
+              name="Wall Panels — Revamp in a day" rating="4.7" reviews="6K"
+              price="₹2,499" startsAt
+              img="assets/service-cards/wall-panels-revamp.png"
+              onClick={() => onNav('serviceProject')} onAdd={() => onNav('serviceProject')}
+            />
+            <SvcRailCard
+              name="Stove Service & Repair" rating="4.6" reviews="19K"
+              price="₹299" startsAt
+              img="assets/service-cards/stove-repair.png"
+              onClick={() => onNav('serviceFixed')} onAdd={() => onNav('serviceFixed')}
+            />
+          </HRail>
+        </div>
+
+        {/* Salon & Spa — for Women / Men, feeds into the package-based Salon Royale flow */}
+        <div style={{ background: ZEP.surface, marginBottom: 8, paddingBottom: 4 }}>
+          <SHead title="Salon & Spa for Women" subtitle="Pamper yourself at home" onCta={() => onNav('servicePackage')} />
+          <HRail>
+            <SvcRailCard
+              name="Salon Royale — Facial & Cleanup" rating="4.87" reviews="93K"
+              price="₹649" startsAt options={4}
+              img="assets/service-cards/facial-cleanup.png"
+              onClick={() => onNav('servicePackage')} onAdd={() => onNav('servicePackage')}
+            />
+            <SvcRailCard
+              name="Deep Tissue Massage" rating="4.83" reviews="18K"
+              price="₹1,299" strikePrice="₹1,499"
+              img="assets/service-cards/deep-tissue-massage.png"
+              onClick={() => onNav('servicePackage')} onAdd={() => onNav('servicePackage')}
+            />
+          </HRail>
+        </div>
+
+        <div style={{ background: ZEP.surface, marginBottom: 8, paddingBottom: 4 }}>
+          <SHead title="Salon for Men" subtitle="Grooming essentials" onCta={() => onNav('servicePackage')} />
+          <HRail>
+            <SvcRailCard
+              name="Salon Royale — Grooming" rating="4.90" reviews="250K"
+              price="₹758" startsAt options={5}
+              img="assets/service-cards/mens-salon-grooming.png"
+              onClick={() => onNav('servicePackage')} onAdd={() => onNav('servicePackage')}
+            />
+            <SvcRailCard
+              name="Haircut for Men" rating="4.90" reviews="132K"
+              price="₹459" startsAt
+              img="assets/service-cards/mens-haircut.png"
+              onClick={() => onNav('servicePackage')} onAdd={() => onNav('servicePackage')}
+            />
+            <SvcRailCard
+              name="Beard Styling & Trim" rating="4.86" reviews="45K"
+              price="₹249" startsAt
+              img="assets/service-cards/beard-styling.png"
+              onClick={() => onNav('servicePackage')} onAdd={() => onNav('servicePackage')}
+            />
           </HRail>
         </div>
 
@@ -1934,25 +2016,25 @@ function HomeScreen({ onNav }) {
           <HRail>
             <SvcRailCard
               name="Electrician" rating="4.8" reviews="856K"
-              price="₹299/hr" startsAt options={4}
-              img="assets/service-cards/electrician.png"
+              price="₹299" startsAt options={4}
+              img="assets/service-cards/electrician-fixture-repair.png"
               onClick={() => onNav('serviceHourly')} onAdd={() => onNav('serviceHourly')}
             />
             <SvcRailCard
               name="Plumber" rating="4.9" reviews="312K"
-              price="₹299/hr" startsAt options={3}
+              price="₹299" startsAt options={3}
               img="assets/service-cards/plumber.png"
-              onClick={() => onNav('serviceHourly')} onAdd={() => onNav('serviceHourly')}
+              onClick={() => onNav('categoryListing')} onAdd={() => onNav('categoryListing')}
             />
             <SvcRailCard
               name="Carpenter" rating="4.7" reviews="204K"
-              price="₹349/hr" startsAt options={5}
+              price="₹349" startsAt options={5}
               img="assets/service-cards/carpenter.png"
               onClick={() => onNav('serviceHourly')} onAdd={() => onNav('serviceHourly')}
             />
             <SvcRailCard
               name="Deep Cleaning" rating="4.6" reviews="631K"
-              price="₹349/hr" startsAt options={6}
+              price="₹349" startsAt options={6}
               img="assets/service-cards/deep-cleaning.png"
               onClick={() => onNav('serviceHourly')} onAdd={() => onNav('serviceHourly')}
             />
@@ -2262,10 +2344,10 @@ const HOURLY_HOW = [
 ];
 
 const HOURLY_SERVICES = [
-  { name: 'Fan Installation & Repair',     bullets: ['Ceiling, wall-mount & table fan — install or fix', 'Includes regulator wiring and balancing', 'Loose blade tightening & noise troubleshooting'] },
-  { name: 'Switch & Socket Replacement',   bullets: ['Modular and conventional switch swap', 'Broken socket plate or switch mechanism replacement', 'Covers 5A, 15A and USB-type sockets'] },
-  { name: 'MCB & Wiring Repair',           bullets: ['MCB tripping diagnosis and replacement', 'Short-circuit detection and isolation', 'Loose or burnt wire re-termination'] },
-  { name: 'Light Fitting & Fixture',       bullets: ['LED panels, chandeliers, tube lights & spot lights', 'Fixture bracket drilling and secure mounting', 'Dimmer compatibility check for smart lights'] },
+  { name: 'Fan Installation & Repair',     icon: 'Wind',     bullets: ['Ceiling, wall-mount & table fan — install or fix', 'Includes regulator wiring and balancing', 'Loose blade tightening & noise troubleshooting'] },
+  { name: 'Switch & Socket Replacement',   icon: 'Zap',      bullets: ['Modular and conventional switch swap', 'Broken socket plate or switch mechanism replacement', 'Covers 5A, 15A and USB-type sockets'] },
+  { name: 'MCB & Wiring Repair',           icon: 'Tool',     bullets: ['MCB tripping diagnosis and replacement', 'Short-circuit detection and isolation', 'Loose or burnt wire re-termination'] },
+  { name: 'Light Fitting & Fixture',       icon: 'Sparkles', bullets: ['LED panels, chandeliers, tube lights & spot lights', 'Fixture bracket drilling and secure mounting', 'Dimmer compatibility check for smart lights'] },
 ];
 
 function PkgRow({ pkg, selected, onClick, isLast }) {
@@ -2334,11 +2416,10 @@ function ServiceHourlyScreen({ onNav }) {
     <div style={{ height: '100%', position: 'relative', background: ZEP.bg, overflow: 'hidden', fontFamily: FONT }}>
       <div style={{ height: '100%', overflowY: 'auto', scrollbarWidth: 'none' }}>
 
-        <SvcHero
+        <CatListHeader
           title="Electrical"
-          subtitle="Licensed technicians · Fixed-time packages"
-          gradient={`linear-gradient(145deg, #011a45 0%, ${ZEP.primaryDark} 35%, ${ZEP.primary} 70%, #2477d4 100%)`}
-          rating="4.8" reviews="1,240"
+          tagline="Licensed technicians · Fixed-time packages"
+          rating="4.8" bookings="1,240"
           onBack={() => onNav('home')}
         />
 
@@ -2397,37 +2478,7 @@ function ServiceHourlyScreen({ onNav }) {
 
           <SvcAccordion title="Services included" open={svcOpen} onToggle={() => setSvcOpen(v => !v)}>
             <div>
-              {HOURLY_SERVICES.map((svc, i) => {
-                const isLast = i === HOURLY_SERVICES.length - 1;
-                return (
-                  <div key={i} style={{
-                    display: 'flex', gap: 10, alignItems: 'stretch',
-                    paddingBottom: isLast ? 0 : 12,
-                    marginBottom: isLast ? 0 : 12,
-                    borderBottom: isLast ? 'none' : `1px solid ${ZEP.divider}`,
-                  }}>
-                    <div style={{
-                      width: 76, flexShrink: 0, borderRadius: 8,
-                      background: '#EBEBEB', border: '1px solid #DCDCDC',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 80,
-                    }}>
-                      <LIcon name="ImageIcon" size={22} color="#AAAAAA" />
-                    </div>
-                    <div style={{ flex: 1, minWidth: 0, paddingTop: 2 }}>
-                      <div style={{ fontSize: 13, fontWeight: 700, color: ZEP.text, fontFamily: FONT, marginBottom: 6, lineHeight: 1.3 }}>
-                        {svc.name}
-                      </div>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                        {svc.bullets.map((b, j) => (
-                          <div key={j} style={{ display: 'flex', alignItems: 'flex-start', gap: 6, fontSize: 11.5, color: ZEP.textSec, fontFamily: FONT, lineHeight: 1.5 }}>
-                            <span style={{ marginTop: 2, flexShrink: 0 }}>·</span><span>{b}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+              {HOURLY_SERVICES.map(svc => <ProjectIncludeCard key={svc.name} svc={svc} />)}
             </div>
           </SvcAccordion>
 
@@ -2824,32 +2875,28 @@ function ProjectStepRow({ step, isLast }) {
   );
 }
 
-function ProjectIncludeItem({ svc, isLast }) {
-  const [open, setOpen] = React.useState(false);
+function ProjectIncludeCard({ svc }) {
   return (
-    <div style={{ paddingBottom: isLast ? 0 : 8, marginBottom: isLast ? 0 : 8, borderBottom: isLast ? 'none' : `1px solid ${ZEP.divider}` }}>
-      <div onClick={() => setOpen(!open)} style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
-        <div style={{
-          width: 32, height: 32, borderRadius: 9,
-          background: ZEP.primaryLight,
-          display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-        }}>
-          <LIcon name={svc.icon} size={14} color={ZEP.primary} />
-        </div>
-        <span style={{ flex: 1, fontSize: 13, fontWeight: 600, color: ZEP.text, fontFamily: FONT }}>{svc.name}</span>
-        <div style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 200ms' }}>
-          <LIcon name="ChevronDown" size={14} color={ZEP.textSec} />
-        </div>
-      </div>
-      {open && (
-        <div style={{ paddingLeft: 42, paddingTop: 8 }}>
+    <div style={{ display: 'flex', gap: 12, padding: '14px 0', borderBottom: `1px solid ${ZEP.divider}` }}>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ fontSize: 14, fontWeight: 700, color: ZEP.text, fontFamily: FONT, lineHeight: 1.3, marginBottom: 6 }}>{svc.name}</div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
           {svc.bullets.map((b, i) => (
-            <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 6, fontSize: 11.5, color: ZEP.textSec, fontFamily: FONT, lineHeight: 1.5, marginBottom: 3 }}>
-              <span style={{ marginTop: 2, flexShrink: 0 }}>·</span><span>{b}</span>
+            <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 6, fontSize: 12, color: ZEP.textSec, fontFamily: FONT, lineHeight: 1.5 }}>
+              <LIcon name="Check" size={11} color={ZEP.success} style={{ marginTop: 2, flexShrink: 0 }} />
+              <span>{b}</span>
             </div>
           ))}
         </div>
-      )}
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+        <div style={{ width: 76, height: 76, borderRadius: 10, background: ZEP.primaryLight, border: `1px solid ${ZEP.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <LIcon name={svc.icon} size={26} color={ZEP.primary} strokeWidth={1.5} />
+        </div>
+        <span style={{ fontSize: 10.5, fontWeight: 700, color: ZEP.success, fontFamily: FONT, display: 'flex', alignItems: 'center', gap: 3, whiteSpace: 'nowrap' }}>
+          <LIcon name="CheckCircle2" size={11} color={ZEP.success} /> Included
+        </span>
+      </div>
     </div>
   );
 }
@@ -2870,12 +2917,16 @@ function ServiceProjectScreen({ onNav }) {
     <div style={{ height: '100%', position: 'relative', background: ZEP.bg, overflow: 'hidden', fontFamily: FONT }}>
       <div style={{ height: '100%', overflowY: 'auto', scrollbarWidth: 'none' }}>
 
-        <SvcHero
+        <CatListHeader
           title="Rental Turnaround"
-          subtitle="Full property makeover · Tenant-ready"
-          gradient="linear-gradient(145deg, #0d2b1a 0%, #1a4a2e 35%, #246b40 70%, #3a8f58 100%)"
-          priceFrom="₹4,999"
+          tagline="Full property makeover · Tenant-ready"
           onBack={() => onNav('home')}
+          right={
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ fontSize: 10, color: ZEP.textSec, fontFamily: FONT, marginBottom: 2 }}>Starting from</div>
+              <div style={{ fontSize: 17, fontWeight: 800, color: ZEP.text, fontFamily: FONT }}>₹4,999</div>
+            </div>
+          }
         />
 
         <div style={{ padding: '16px 14px 0' }}>
@@ -2909,37 +2960,7 @@ function ServiceProjectScreen({ onNav }) {
 
           <SvcAccordion title="Services included" open={svcOpen} onToggle={() => setSvcOpen(v => !v)}>
             <div>
-              {PROJECT_INCLUDES.map((svc, i) => {
-                const isLast = i === PROJECT_INCLUDES.length - 1;
-                return (
-                  <div key={svc.id} style={{
-                    display: 'flex', gap: 10, alignItems: 'stretch',
-                    paddingBottom: isLast ? 0 : 12,
-                    marginBottom: isLast ? 0 : 12,
-                    borderBottom: isLast ? 'none' : `1px solid ${ZEP.divider}`,
-                  }}>
-                    <div style={{
-                      width: 76, flexShrink: 0, borderRadius: 8,
-                      background: ZEP.primaryLight, border: `1px solid ${ZEP.border}`,
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 80,
-                    }}>
-                      <LIcon name={svc.icon} size={26} color={ZEP.primary} strokeWidth={1.5} />
-                    </div>
-                    <div style={{ flex: 1, minWidth: 0, paddingTop: 2 }}>
-                      <div style={{ fontSize: 13, fontWeight: 700, color: ZEP.text, fontFamily: FONT, marginBottom: 6, lineHeight: 1.3 }}>
-                        {svc.name}
-                      </div>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                        {svc.bullets.map((b, j) => (
-                          <div key={j} style={{ display: 'flex', alignItems: 'flex-start', gap: 6, fontSize: 11.5, color: ZEP.textSec, fontFamily: FONT, lineHeight: 1.5 }}>
-                            <span style={{ marginTop: 2, flexShrink: 0 }}>·</span><span>{b}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+              {PROJECT_INCLUDES.map(svc => <ProjectIncludeCard key={svc.id} svc={svc} />)}
             </div>
           </SvcAccordion>
 
@@ -3297,7 +3318,7 @@ function CheckoutScreen({ data = {}, onNav, onBack }) {
           </div>
           <div style={{ display: 'flex', gap: 8, flex: 1 }}>
             <button style={{ flex: 1, padding: '12px 0', borderRadius: 9999, border: `1.5px solid ${ZEPCOLORS.border}`, background: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: FONT }}>Pay After Service</button>
-            <button onClick={() => onNav && onNav('payment')} style={{ flex: 1, padding: '12px 0', borderRadius: 9999, border: 'none', background: ZEPCOLORS.primary, color: '#fff', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: FONT }}>Proceed to Pay</button>
+            <button onClick={() => onNav && onNav('payment', { backTo: 'checkout' })} style={{ flex: 1, padding: '12px 0', borderRadius: 9999, border: 'none', background: ZEPCOLORS.primary, color: '#fff', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: FONT }}>Proceed to Pay</button>
           </div>
         </div>
       </div>
@@ -3461,7 +3482,7 @@ function CheckoutV2Screen({ data = {}, onNav, onBack }) {
           </div>
           <div style={{ display: 'flex', gap: 8, flex: 1 }}>
             <button style={{ flex: 1, padding: '12px 0', borderRadius: 9999, border: `1.5px solid ${ZEPCOLORS.border}`, background: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: FONT }}>Pay After Service</button>
-            <button onClick={() => onNav && onNav('payment')} style={{ flex: 1, padding: '12px 0', borderRadius: 9999, border: 'none', background: ZEPCOLORS.primary, color: '#fff', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: FONT }}>Proceed to Pay</button>
+            <button onClick={() => onNav && onNav('payment', { backTo: 'checkoutV2' })} style={{ flex: 1, padding: '12px 0', borderRadius: 9999, border: 'none', background: ZEPCOLORS.primary, color: '#fff', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: FONT }}>Proceed to Pay</button>
           </div>
         </div>
       </div>
@@ -3509,7 +3530,543 @@ function BookingsScreen({ onNav, onBack }) {
           ? <div style={{ padding: '48px 0', textAlign: 'center', color: ZEPCOLORS.textSec, fontSize: 15, fontFamily: FONT }}>No {activeTab.toLowerCase()} bookings</div>
           : filtered.map(b => <ZepBookingItem key={b.id} {...b} onClick={() => onNav && onNav('orderDetail', b)} />)}
       </div>
-      <ZepBottomNav active="bookings" onNav={id => { if (id === 'home') onNav('home'); if (id === 'profile') onNav('profile'); }} />
+      <ZepBottomNav active="bookings" onNav={id => { if (id === 'home') onNav('home'); if (id === 'profile') onNav('profile'); if (id === 'property') onNav('property'); if (id === 'offers') onNav('offers'); }} />
+    </div>
+  );
+}
+
+// ══════════════════════════════════════════════════════════
+// CATEGORY LISTING — sub-category rail + item catalog
+// (Urban-Company-style category page, e.g. "Plumber")
+// ══════════════════════════════════════════════════════════
+function CatListHeader({ title, tagline, rating, bookings, eta, right, onBack, onSearch, onShare }) {
+  return (
+    <div style={{ background: ZEP.surface, flexShrink: 0, borderBottom: `1px solid ${ZEP.border}` }}>
+      <StatusBar dark={false} />
+      <div style={{ padding: '2px 16px 14px', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
+          <button onClick={onBack} style={{ background: ZEP.inputFill, border: 'none', cursor: 'pointer', width: 36, height: 36, borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <LIcon name="ArrowLeft" size={19} color={ZEP.text} strokeWidth={2.2} />
+          </button>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontSize: 18, fontWeight: 700, color: ZEP.text, fontFamily: FONT, lineHeight: 1.2 }}>{title}</div>
+            {tagline && (
+              <div style={{ fontSize: 12, color: ZEP.textSec, fontFamily: FONT, marginTop: 3 }}>{tagline}</div>
+            )}
+            {(rating || eta) && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 3, flexWrap: 'wrap' }}>
+                {rating && (
+                  <React.Fragment>
+                    <span style={{ color: '#FAC775', fontSize: 11 }}>★</span>
+                    <span style={{ fontSize: 12, color: ZEP.textSec, fontFamily: FONT }}>{rating} ({bookings})</span>
+                  </React.Fragment>
+                )}
+                {eta && (
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: ZEP.successBg, color: ZEP.success, borderRadius: 9999, padding: '2px 8px', fontSize: 11, fontWeight: 700, fontFamily: FONT }}>
+                    <LIcon name="Zap" size={9} color={ZEP.success} /> {eta}
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+        {right ? (
+          <div style={{ flexShrink: 0 }}>{right}</div>
+        ) : (
+        <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+          <button onClick={onSearch} style={{ background: ZEP.inputFill, border: 'none', cursor: 'pointer', width: 36, height: 36, borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <LIcon name="Search" size={16} color={ZEP.text} />
+          </button>
+          <button onClick={onShare} style={{ background: ZEP.inputFill, border: 'none', cursor: 'pointer', width: 36, height: 36, borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <LIcon name="Share2" size={15} color={ZEP.text} />
+          </button>
+        </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function CatSubNav({ subcats, activeId, onSelect }) {
+  return (
+    <div style={{ display: 'flex', gap: 22, overflowX: 'auto', padding: '14px 16px', background: ZEP.surface, borderBottom: `1px solid ${ZEP.divider}`, WebkitOverflowScrolling: 'touch', flexShrink: 0 }}>
+      {subcats.map(s => {
+        const active = s.id === activeId;
+        return (
+          <div key={s.id} onClick={() => onSelect(s.id)} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, flexShrink: 0, cursor: 'pointer', minWidth: 56 }}>
+            <div style={{ width: 48, height: 48, borderRadius: 14, background: active ? ZEP.primary : ZEP.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background 150ms' }}>
+              <LIcon name={s.icon} size={20} color={active ? '#fff' : ZEP.primary} />
+            </div>
+            <span style={{ fontSize: 10.5, fontWeight: 600, color: active ? ZEP.text : ZEP.textSec, fontFamily: FONT, textAlign: 'center', lineHeight: 1.2, maxWidth: 64 }}>{s.label}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function CatItemCard({ item, qty, onAdd, onInc, onDec, onViewDetails }) {
+  return (
+    <div style={{ display: 'flex', gap: 12, padding: '14px 0', borderBottom: `1px solid ${ZEP.divider}` }}>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        {item.badge && (
+          <span style={{ display: 'inline-block', background: ZEP.successBg, color: ZEP.success, borderRadius: 6, padding: '2px 8px', fontSize: 10.5, fontWeight: 700, fontFamily: FONT, marginBottom: 6 }}>{item.badge}</span>
+        )}
+        <div style={{ fontSize: 14, fontWeight: 700, color: ZEP.text, fontFamily: FONT, lineHeight: 1.3, marginBottom: 4 }}>{item.name}</div>
+        {item.rating && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: 4 }}>
+            <span style={{ color: '#FAC775', fontSize: 11 }}>★</span>
+            <span style={{ fontSize: 11.5, color: ZEP.textSec, fontFamily: FONT }}>{item.rating}{item.reviews ? ` (${item.reviews} reviews)` : ''}</span>
+          </div>
+        )}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6, flexWrap: 'wrap' }}>
+          {item.originalPrice && <span style={{ fontSize: 12, color: ZEP.textHint, textDecoration: 'line-through', fontFamily: FONT }}>{fmtINR(item.originalPrice)}</span>}
+          <span style={{ fontSize: 13, fontWeight: 600, color: ZEP.text, fontFamily: FONT }}>Starts at {fmtINR(item.price)}{item.duration ? ` · ${item.duration}` : ''}</span>
+        </div>
+        <div onClick={onViewDetails} style={{ fontSize: 12, color: ZEP.primary, fontWeight: 700, fontFamily: FONT, cursor: 'pointer', textDecoration: 'underline', display: 'inline-block' }}>View details</div>
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+        <div style={{ width: 76, height: 76, borderRadius: 10, background: '#EBEBEB', border: `1px solid ${ZEP.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <LIcon name="ImageIcon" size={22} color="#AAAAAA" />
+        </div>
+        {qty === 0 ? (
+          <button onClick={onAdd} style={{ width: 76, padding: '7px 0', borderRadius: 8, border: `1.5px solid ${ZEP.primary}`, background: '#fff', color: ZEP.primary, fontSize: 12.5, fontWeight: 700, cursor: 'pointer', fontFamily: FONT }}>Add</button>
+        ) : (
+          <div style={{ display: 'flex', alignItems: 'center', border: `1.5px solid ${ZEP.primary}`, borderRadius: 8, overflow: 'hidden', width: 76 }}>
+            <button onClick={onDec} style={{ flex: 1, height: 28, background: ZEP.primary, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><LIcon name="Minus" size={10} color="#fff" /></button>
+            <span style={{ width: 22, textAlign: 'center', fontSize: 12.5, fontWeight: 700, color: ZEP.primary, fontFamily: FONT }}>{qty}</span>
+            <button onClick={onInc} style={{ flex: 1, height: 28, background: ZEP.primary, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><LIcon name="Plus" size={10} color="#fff" /></button>
+          </div>
+        )}
+        {item.options && qty === 0 && <span style={{ fontSize: 10, color: ZEP.textSec, fontFamily: FONT }}>{item.options} options</span>}
+      </div>
+    </div>
+  );
+}
+
+const PLUMBER_CATEGORY = {
+  id: 'plumber', name: 'Plumber', rating: '4.78', bookings: '3.0K bookings', eta: 'In 29 mins',
+  subcats: [
+    { id: 'tapmixer',         label: 'Tap & mixer',          icon: 'Droplet' },
+    { id: 'toilet',           label: 'Toilet',               icon: 'Tool' },
+    { id: 'bathshower',       label: 'Bath & shower',        icon: 'Droplet' },
+    { id: 'bathaccessories',  label: 'Bath accessories',     icon: 'Wrench' },
+    { id: 'basinsink',        label: 'Basin & sink',         icon: 'Droplet' },
+    { id: 'drainage',         label: 'Drainage & blockage',  icon: 'Tool' },
+  ],
+};
+
+const PLUMBER_ITEMS = [
+  { id: 'tap-combo',        subcat: 'tapmixer',        name: 'Combo for tap & mixer',              badge: '10% OFF', price: 129,  originalPrice: 143, duration: '30 mins' },
+  { id: 'tap-install',      subcat: 'tapmixer',        name: 'Tap installation/replacement',        rating: 4.83, reviews: '319K', price: 129, options: 4 },
+  { id: 'tap-accessory',    subcat: 'tapmixer',        name: 'Tap accessory installation',          rating: 4.83, reviews: '11K',  price: 149, options: 4 },
+  { id: 'toilet-combo',     subcat: 'toilet',          name: 'Combo for toilet',                    badge: '10% OFF', price: 199, originalPrice: 221, duration: '30 mins' },
+  { id: 'toilet-flushtank-ext', subcat: 'toilet',      name: 'External flush tank repair',          price: 649 },
+  { id: 'toilet-install',   subcat: 'toilet',          name: 'Toilet installation',                 rating: 4.79, reviews: '430K', price: 149, duration: '30 mins' },
+  { id: 'toilet-repair',    subcat: 'toilet',          name: 'Toilet repair',                       rating: 4.79, reviews: '245K', price: 129 },
+  { id: 'toilet-flushtank', subcat: 'toilet',          name: 'Flush tank repair',                   rating: 4.79, reviews: '153K', price: 199, options: 3 },
+  { id: 'toilet-seat',      subcat: 'toilet',          name: 'Toilet seat cover installation',      rating: 4.63, reviews: '43K',  price: 149, duration: '30 mins' },
+  { id: 'toilet-jetspray',  subcat: 'toilet',          name: 'Jet spray repair/replacement',        rating: 4.82, reviews: '151K', price: 199, options: 2 },
+  { id: 'bath-shower-repair', subcat: 'bathshower',    name: 'Shower panel repair',                 rating: 4.70, reviews: '62K',  price: 249, options: 3 },
+  { id: 'bath-mixer',       subcat: 'bathshower',      name: 'Bath & shower mixer installation',    rating: 4.75, reviews: '58K',  price: 349 },
+  { id: 'accessory-holder', subcat: 'bathaccessories', name: 'Towel rod / accessory installation',  rating: 4.80, reviews: '91K',  price: 99,  options: 5 },
+  { id: 'accessory-mirror', subcat: 'bathaccessories', name: 'Bathroom mirror fitting',              rating: 4.72, reviews: '22K',  price: 199 },
+  { id: 'basin-install',    subcat: 'basinsink',       name: 'Basin installation',                  rating: 4.77, reviews: '88K',  price: 399 },
+  { id: 'sink-leak',        subcat: 'basinsink',       name: 'Sink leak repair',                    rating: 4.81, reviews: '134K', price: 149 },
+  { id: 'drainage-block',   subcat: 'drainage',        name: 'Drainage blockage removal',           rating: 4.74, reviews: '176K', price: 249 },
+  { id: 'drainage-pipe',    subcat: 'drainage',        name: 'Pipe leak repair',                    rating: 4.78, reviews: '99K',  price: 199, options: 2 },
+];
+
+function CategoryListingScreen({ onNav, data }) {
+  const { useState, useRef } = React;
+  const cat = data || PLUMBER_CATEGORY;
+  const items = cat.items || PLUMBER_ITEMS;
+  const [cart, setCart] = useState({});
+  const [activeSub, setActiveSub] = useState(cat.subcats[0].id);
+  const sectionRefs = useRef({});
+
+  function getQty(id) { return cart[id] || 0; }
+  function setQty(id, n) {
+    setCart(prev => { if (n <= 0) { const c = { ...prev }; delete c[id]; return c; } return { ...prev, [id]: n }; });
+  }
+  function scrollTo(id) {
+    setActiveSub(id);
+    const el = sectionRefs.current[id];
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  const cartItems = items.filter(it => getQty(it.id) > 0);
+  const cartCount = cartItems.reduce((sum, it) => sum + getQty(it.id), 0);
+  const cartTotal = cartItems.reduce((sum, it) => sum + getQty(it.id) * it.price, 0);
+
+  return (
+    <div style={{ height: '100%', position: 'relative', background: ZEP.bg, overflow: 'hidden', fontFamily: FONT, display: 'flex', flexDirection: 'column' }}>
+      <CatListHeader title={cat.name} rating={cat.rating} bookings={cat.bookings} eta={cat.eta} onBack={() => onNav('home')} />
+      <CatSubNav subcats={cat.subcats} activeId={activeSub} onSelect={scrollTo} />
+
+      <div className="scrolly" style={{ flex: 1, overflowY: 'auto', padding: '4px 16px 170px' }}>
+        {cat.subcats.map((sc, sIdx) => {
+          const scItems = items.filter(it => it.subcat === sc.id);
+          if (scItems.length === 0) return null;
+          return (
+            <div key={sc.id} ref={el => { sectionRefs.current[sc.id] = el; }} style={{ paddingTop: 16 }}>
+              <div style={{ fontSize: 16, fontWeight: 800, color: ZEP.text, fontFamily: FONT, marginBottom: 4 }}>{sc.label}</div>
+              {scItems.map(it => (
+                <CatItemCard key={it.id} item={it} qty={getQty(it.id)}
+                  onAdd={() => setQty(it.id, 1)} onInc={() => setQty(it.id, getQty(it.id) + 1)} onDec={() => setQty(it.id, getQty(it.id) - 1)}
+                  onViewDetails={() => {}} />
+              ))}
+              {sIdx === 1 && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: ZEP.successBg, borderRadius: 12, padding: 14, margin: '4px 0 14px' }}>
+                  <div style={{ width: 38, height: 38, borderRadius: 10, background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <LIcon name="Percent" size={18} color={ZEP.success} />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: ZEP.text, fontFamily: FONT }}>Get 10% off instantly</div>
+                    <div style={{ fontSize: 11.5, color: ZEP.textSec, fontFamily: FONT, marginTop: 2 }}>Upon pre-selecting your services before booking. Valid on booking above ₹500.</div>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      <div style={{ position: 'absolute', left: 0, right: 0, bottom: cartCount > 0 ? 76 : 0, background: ZEP.successBg, padding: '9px 16px', display: 'flex', alignItems: 'center', gap: 8, transition: 'bottom 150ms' }}>
+        <LIcon name="CheckCircle2" size={13} color={ZEP.success} />
+        <span style={{ fontSize: 12, color: ZEP.success, fontWeight: 600, fontFamily: FONT, flex: 1 }}>Get visitation fee off, on orders above ₹499</span>
+        <LIcon name="ChevronDown" size={13} color={ZEP.success} />
+      </div>
+
+      {cartCount > 0 && (
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: ZEP.surface, borderTop: `1px solid ${ZEP.divider}`, padding: '10px 16px 16px', boxShadow: '0 -4px 20px rgba(0,0,0,0.10)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <div style={{ fontSize: 12, color: ZEP.textSec, fontFamily: FONT }}>{cartCount} item{cartCount > 1 ? 's' : ''} added</div>
+            <div style={{ fontSize: 16, fontWeight: 800, color: ZEP.text, fontFamily: FONT }}>{fmtINR(cartTotal)}</div>
+          </div>
+          <button onClick={() => onNav('cart', { categoryName: cat.name, backScreen: 'categoryListing', items: cartItems.map(it => ({ ...it, qty: getQty(it.id) })) })}
+            style={{ padding: '13px 28px', borderRadius: 9999, border: 'none', background: ZEP.primary, color: '#fff', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: FONT }}>
+            View cart
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ══════════════════════════════════════════════════════════
+// CART — "Your cart" (coupons, free gift, tip, cancellation policy)
+// ══════════════════════════════════════════════════════════
+function CrossSellCard({ item, onAdd }) {
+  return (
+    <div style={{ width: 132, flexShrink: 0 }}>
+      <div style={{ width: '100%', aspectRatio: '1 / 1', borderRadius: 10, background: '#EBEBEB', border: `1px solid ${ZEP.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 8 }}>
+        <LIcon name="ImageIcon" size={22} color="#AAAAAA" />
+      </div>
+      <div style={{ fontSize: 12, fontWeight: 700, color: ZEP.text, fontFamily: FONT, lineHeight: 1.3, marginBottom: 4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{item.name}</div>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 6 }}>
+        <span style={{ fontSize: 12, fontWeight: 700, color: ZEP.text, fontFamily: FONT }}>{fmtINR(item.price)}</span>
+        <button onClick={onAdd} style={{ padding: '5px 12px', borderRadius: 7, border: `1.5px solid ${ZEP.primary}`, background: '#fff', color: ZEP.primary, fontSize: 11.5, fontWeight: 700, cursor: 'pointer', fontFamily: FONT }}>Add</button>
+      </div>
+    </div>
+  );
+}
+
+const CART_CROSS_SELL = [
+  { id: 'tap-install',   name: 'Tap installation/replacement', price: 129 },
+  { id: 'tap-accessory', name: 'Tap accessory installation',   price: 149 },
+];
+
+const TIP_OPTIONS = [
+  { value: 50,  label: '₹50' },
+  { value: 75,  label: '₹75', popular: true },
+  { value: 100, label: '₹100' },
+];
+
+function CartScreen({ onNav, onBack, data }) {
+  const { useState } = React;
+  const d = data || { categoryName: 'Plumber', backScreen: 'categoryListing', items: [{ id: 'toilet-repair', name: 'Toilet repair', price: 1499, qty: 1 }] };
+  const [items, setItems] = useState(d.items);
+  const [tip, setTip] = useState(75);
+  const [customTip, setCustomTip] = useState(false);
+  const [giftClaimed, setGiftClaimed] = useState(false);
+  const [billOpen, setBillOpen] = useState(false);
+  const backScreen = d.backScreen || 'categoryListing';
+
+  function setQty(id, n) {
+    setItems(prev => n <= 0 ? prev.filter(it => it.id !== id) : prev.map(it => it.id === id ? { ...it, qty: n } : it));
+  }
+
+  const itemTotal = items.reduce((sum, it) => sum + it.qty * it.price, 0);
+  const gst = Math.round(itemTotal * 0.05);
+  const total = itemTotal + gst + (tip || 0);
+
+  if (items.length === 0) {
+    return (
+      <div style={{ height: '100%', background: ZEP.surface, display: 'flex', flexDirection: 'column', fontFamily: FONT }}>
+        <ZepBackHeader title="Your cart" onBack={onBack || (() => onNav('home'))} />
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 24, textAlign: 'center' }}>
+          <LIcon name="ClipboardList" size={44} color={ZEP.textHint} />
+          <div style={{ fontSize: 15, fontWeight: 700, color: ZEP.text, fontFamily: FONT, marginTop: 14 }}>Your cart is empty</div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ height: '100%', background: ZEP.bg, display: 'flex', flexDirection: 'column', position: 'relative', fontFamily: FONT }}>
+      <ZepBackHeader title="Your cart" onBack={() => onNav(backScreen)} />
+      <div className="scrolly" style={{ flex: 1, overflowY: 'auto', padding: '14px 16px 140px' }}>
+
+        <CkCard>
+          <div style={{ fontSize: 15, fontWeight: 700, color: ZEP.text, fontFamily: FONT, marginBottom: 8 }}>{d.categoryName}</div>
+          {items.map((it, idx) => (
+            <div key={it.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderTop: idx > 0 ? `1px solid ${ZEP.divider}` : 'none' }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 13.5, fontWeight: 600, color: ZEP.text, fontFamily: FONT }}>{it.name}</div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: ZEP.text, fontFamily: FONT, marginTop: 2 }}>{fmtINR(it.price)}</div>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', border: `1.5px solid ${ZEP.primary}`, borderRadius: 8, overflow: 'hidden' }}>
+                <button onClick={() => setQty(it.id, it.qty - 1)} style={{ width: 28, height: 28, background: ZEP.primary, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><LIcon name="Minus" size={11} color="#fff" /></button>
+                <span style={{ width: 24, textAlign: 'center', fontSize: 13, fontWeight: 700, color: ZEP.primary, fontFamily: FONT }}>{it.qty}</span>
+                <button onClick={() => setQty(it.id, it.qty + 1)} style={{ width: 28, height: 28, background: ZEP.primary, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><LIcon name="Plus" size={11} color="#fff" /></button>
+              </div>
+            </div>
+          ))}
+          <div onClick={() => onNav(backScreen)} style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 10, cursor: 'pointer' }}>
+            <LIcon name="Plus" size={12} color={ZEP.primary} />
+            <span style={{ fontSize: 13, color: ZEP.primary, fontWeight: 700, fontFamily: FONT }}>Add more items</span>
+          </div>
+        </CkCard>
+
+        <CkCard style={{ background: ZEP.accentLight, border: '1px solid #FCE1B8' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ width: 38, height: 38, borderRadius: 10, background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <LIcon name="Gift" size={18} color={ZEP.accent} />
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <span style={{ fontSize: 10, fontWeight: 700, color: ZEP.accent, background: '#fff', borderRadius: 6, padding: '2px 6px', fontFamily: FONT }}>FREE GIFT</span>
+              <div style={{ fontSize: 13, fontWeight: 700, color: ZEP.text, fontFamily: FONT, marginTop: 4 }}>Flat ₹500 off on Women's Salon</div>
+              <div style={{ fontSize: 11, color: ZEP.textSec, fontFamily: FONT, marginTop: 2 }}>45 day validity · Redeemable after this booking</div>
+            </div>
+            <button onClick={() => setGiftClaimed(true)} disabled={giftClaimed} style={{ padding: '8px 14px', borderRadius: 9999, border: 'none', background: giftClaimed ? ZEP.border : ZEP.primary, color: giftClaimed ? ZEP.textSec : '#fff', fontSize: 12, fontWeight: 700, cursor: giftClaimed ? 'default' : 'pointer', fontFamily: FONT, flexShrink: 0 }}>{giftClaimed ? 'Claimed' : 'Claim FREE'}</button>
+          </div>
+        </CkCard>
+
+        <div style={{ margin: '4px 0 14px' }}>
+          <div style={{ fontSize: 15, fontWeight: 700, color: ZEP.text, fontFamily: FONT, marginBottom: 10 }}>People also take</div>
+          <div style={{ display: 'flex', gap: 12, overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+            {CART_CROSS_SELL.map(cs => (
+              <CrossSellCard key={cs.id} item={cs} onAdd={() => setItems(prev => prev.some(it => it.id === cs.id) ? prev.map(it => it.id === cs.id ? { ...it, qty: it.qty + 1 } : it) : [...prev, { ...cs, qty: 1 }])} />
+            ))}
+          </div>
+        </div>
+
+        <CkCard style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <LIcon name="Tag" size={16} color={ZEP.primary} />
+            <span style={{ fontSize: 13.5, fontWeight: 600, color: ZEP.text, fontFamily: FONT }}>Coupons and offers</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+            <span style={{ fontSize: 12.5, color: ZEP.primary, fontWeight: 700, fontFamily: FONT }}>View all</span>
+            <LIcon name="ChevronRight" size={13} color={ZEP.primary} />
+          </div>
+        </CkCard>
+
+        <CkCard style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <div style={{ fontSize: 11.5, color: ZEP.textSec, fontFamily: FONT }}>Verified Customer</div>
+            <div style={{ fontSize: 13.5, fontWeight: 600, color: ZEP.text, fontFamily: FONT, marginTop: 2 }}>+91-8709964141</div>
+          </div>
+          <span style={{ fontSize: 13, color: ZEP.primary, fontWeight: 700, fontFamily: FONT, cursor: 'pointer' }}>Change</span>
+        </CkCard>
+
+        <CkCard>
+          <div onClick={() => setBillOpen(v => !v)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}>
+            <div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: ZEP.text, fontFamily: FONT }}>Total bill {fmtINR(total)}</div>
+              <div style={{ fontSize: 11.5, color: ZEP.textSec, fontFamily: FONT, marginTop: 2 }}>Incl. govt. taxes & charges</div>
+            </div>
+            <div style={{ transform: billOpen ? 'rotate(180deg)' : 'none', transition: 'transform 150ms' }}>
+              <LIcon name="ChevronDown" size={15} color={ZEP.textSec} />
+            </div>
+          </div>
+          {billOpen && (
+            <div style={{ marginTop: 12, paddingTop: 12, borderTop: `1px solid ${ZEP.divider}` }}>
+              {[{ label: 'Item total', value: fmtINR(itemTotal) }, { label: 'Taxes & charges', value: fmtINR(gst) }, { label: 'Tip to professional', value: fmtINR(tip || 0) }].map((r, i) => (
+                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+                  <span style={{ fontSize: 13, color: ZEP.textSec, fontFamily: FONT }}>{r.label}</span>
+                  <span style={{ fontSize: 13, color: ZEP.text, fontFamily: FONT }}>{r.value}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </CkCard>
+
+        <CkCard>
+          <div style={{ fontSize: 14, fontWeight: 700, color: ZEP.text, fontFamily: FONT, marginBottom: 4 }}>Add a tip to thank the Professional</div>
+          <div style={{ fontSize: 11.5, color: ZEP.textSec, fontFamily: FONT, marginBottom: 12 }}>100% of the tip goes to the professional</div>
+          <div style={{ display: 'flex', gap: 8 }}>
+            {TIP_OPTIONS.map(o => (
+              <div key={o.value} onClick={() => { setTip(o.value); setCustomTip(false); }} style={{ position: 'relative', flex: 1, textAlign: 'center', padding: '10px 0', borderRadius: 10, border: `1.5px solid ${tip === o.value && !customTip ? ZEP.primary : ZEP.border}`, background: tip === o.value && !customTip ? ZEP.primaryLight : '#fff', cursor: 'pointer' }}>
+                {o.popular && <span style={{ position: 'absolute', top: -9, left: '50%', transform: 'translateX(-50%)', background: ZEP.accent, color: '#fff', fontSize: 8.5, fontWeight: 700, borderRadius: 9999, padding: '1px 6px', fontFamily: FONT, whiteSpace: 'nowrap' }}>POPULAR</span>}
+                <span style={{ fontSize: 13, fontWeight: 700, color: ZEP.text, fontFamily: FONT }}>{o.label}</span>
+              </div>
+            ))}
+            <div onClick={() => { setCustomTip(true); setTip(0); }} style={{ flex: 1, textAlign: 'center', padding: '10px 0', borderRadius: 10, border: `1.5px solid ${customTip ? ZEP.primary : ZEP.border}`, background: customTip ? ZEP.primaryLight : '#fff', cursor: 'pointer' }}>
+              <span style={{ fontSize: 13, fontWeight: 700, color: ZEP.text, fontFamily: FONT }}>Custom</span>
+            </div>
+          </div>
+        </CkCard>
+
+        <div style={{ padding: '4px 4px 8px' }}>
+          <div style={{ fontSize: 12.5, fontWeight: 700, color: ZEP.text, fontFamily: FONT, marginBottom: 4 }}>Cancellation policy</div>
+          <div style={{ fontSize: 12, color: ZEP.textSec, fontFamily: FONT, lineHeight: 1.5 }}>Free cancellation if done more than 12 hrs before the booking. A fee applies for cancellations closer to the scheduled time.</div>
+        </div>
+      </div>
+
+      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: ZEP.surface, borderTop: `1px solid ${ZEP.divider}`, padding: '12px 16px 24px', boxShadow: '0 -4px 20px rgba(0,0,0,0.10)' }}>
+        <button onClick={() => onNav('checkoutV2', { services: items.map(it => ({ id: it.id, name: it.name, price: it.price })), cart: items.reduce((acc, it) => ({ ...acc, [it.id]: it.qty }), {}) })}
+          style={{ width: '100%', padding: '15px', borderRadius: 9999, border: 'none', background: ZEP.primary, color: '#fff', fontSize: 15, fontWeight: 700, cursor: 'pointer', fontFamily: FONT }}>
+          Add address and slot
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ══════════════════════════════════════════════════════════
+// PACKAGE-BASED SERVICE — "Salon Royale" (packages + per-category tabs)
+// ══════════════════════════════════════════════════════════
+function PackageCard({ pkg, qty, onAdd, onInc, onDec }) {
+  return (
+    <div style={{ background: ZEP.surface, border: `1px solid ${ZEP.border}`, borderRadius: 14, padding: 14, marginBottom: 12, boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 10 }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <span style={{ fontSize: 10, fontWeight: 700, color: ZEP.primary, background: ZEP.primaryLight, borderRadius: 6, padding: '2px 8px', fontFamily: FONT }}>{pkg.badge}</span>
+          <div style={{ fontSize: 15, fontWeight: 700, color: ZEP.text, fontFamily: FONT, marginTop: 6 }}>{pkg.name}</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 4 }}>
+            <span style={{ color: '#FAC775', fontSize: 11 }}>★</span>
+            <span style={{ fontSize: 11.5, color: ZEP.textSec, fontFamily: FONT }}>{pkg.rating} ({pkg.reviews} reviews)</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 6, flexWrap: 'wrap' }}>
+            <span style={{ fontSize: 16, fontWeight: 700, color: ZEP.text, fontFamily: FONT }}>{fmtINR(pkg.price)}</span>
+            {pkg.originalPrice && <span style={{ fontSize: 12, color: ZEP.textHint, textDecoration: 'line-through', fontFamily: FONT }}>{fmtINR(pkg.originalPrice)}</span>}
+            <span style={{ fontSize: 12, color: ZEP.textSec, fontFamily: FONT }}>· {pkg.duration}</span>
+          </div>
+        </div>
+        {qty === 0 ? (
+          <button onClick={onAdd} style={{ padding: '8px 18px', borderRadius: 9999, border: 'none', background: ZEP.primary, color: '#fff', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: FONT, flexShrink: 0 }}>Add</button>
+        ) : (
+          <div style={{ display: 'flex', alignItems: 'center', border: `1.5px solid ${ZEP.primary}`, borderRadius: 9999, overflow: 'hidden', flexShrink: 0 }}>
+            <button onClick={onDec} style={{ width: 28, height: 28, background: ZEP.primary, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><LIcon name="Minus" size={11} color="#fff" /></button>
+            <span style={{ width: 22, textAlign: 'center', fontSize: 13, fontWeight: 700, color: ZEP.primary, fontFamily: FONT }}>{qty}</span>
+            <button onClick={onInc} style={{ width: 28, height: 28, background: ZEP.primary, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><LIcon name="Plus" size={11} color="#fff" /></button>
+          </div>
+        )}
+      </div>
+      <div style={{ marginTop: 8, paddingTop: 10, borderTop: `1px solid ${ZEP.divider}` }}>
+        {pkg.bullets.map((b, i) => (
+          <div key={i} style={{ fontSize: 12, color: ZEP.textSec, fontFamily: FONT, lineHeight: 1.6 }}>{b}</div>
+        ))}
+      </div>
+      <div style={{ marginTop: 10, textAlign: 'center', padding: '9px 0', borderRadius: 9999, border: `1px solid ${ZEP.border}`, fontSize: 12.5, fontWeight: 700, color: ZEP.primary, fontFamily: FONT, cursor: 'pointer' }}>Edit your package</div>
+    </div>
+  );
+}
+
+const SALON_ROYALE = {
+  id: 'salon-royale', name: 'Salon Royale', rating: '4.86', bookings: '1.2M bookings', slot: 'Earliest Sun, 2:30 PM',
+  tabs: [
+    { id: 'packages', label: 'Packages', icon: 'Package' },
+    { id: 'haircare', label: 'Hair care', icon: 'Scissors' },
+    { id: 'facecare', label: 'Face care', icon: 'Smile' },
+    { id: 'massage',  label: 'Massage',   icon: 'Hand' },
+  ],
+};
+
+const SALON_PACKAGES = [
+  { id: 'pkg-grooming', badge: 'PACKAGE', name: 'Grooming essentials', rating: 4.90, reviews: '250K',  price: 758,  duration: '1 hr 15 mins', bullets: ['Haircut for men', 'Shave/beard grooming', 'Trimming & styling'] },
+  { id: 'pkg-complete',  badge: 'PACKAGE', name: 'Complete care',       rating: 4.90, reviews: '206K',  price: 1158, duration: '1 hr 15 mins', bullets: ['Haircut for men', 'Detail (Oil+) Face & neck detail'] },
+  { id: 'pkg-haircolor', badge: 'PACKAGE', name: 'Haircut & color',     rating: 4.89, reviews: '1,208', price: 1108, duration: '1 hr 10 mins', bullets: ["Haircut for men", "Inox colors (L'Oreal) Dark Shade 3"] },
+  { id: 'pkg-hair',      badge: 'PACKAGE', name: 'Hair & care',         rating: 4.89, reviews: '191K',  price: 1977, originalPrice: 2027, duration: '2 hrs 15 mins', bullets: ['Haircut for men', 'Massage 15 min head massage', 'Pedicure Aroma bomb pedicure'] },
+  { id: 'pkg-pedicure',  badge: 'PACKAGE', name: 'Pedicure',            rating: 4.82, reviews: '13K',   price: 1299, originalPrice: 1349, duration: '1 hr 15 mins', bullets: ['Aroma bomb pedicure'] },
+];
+
+const SALON_ITEMS = [
+  { id: 'hc-haircut',    tab: 'haircare', name: 'Haircut for men',                    rating: 4.90, reviews: '132K', price: 459 },
+  { id: 'hc-color',      tab: 'haircare', name: 'Hair color (only application)',      rating: 4.90, reviews: '3K',   price: 199, duration: '25 mins' },
+  { id: 'hc-beardcolor', tab: 'haircare', name: 'Beard colour (only application)',    rating: 4.86, reviews: '1K',   price: 199, duration: '25 mins' },
+  { id: 'fc-facecare',   tab: 'facecare', name: 'Face care',                          rating: 4.89, reviews: '20K',  price: 459, duration: '45 mins' },
+  { id: 'fc-facial',     tab: 'facecare', name: 'Beardo golden glow facial',          rating: 4.80, reviews: '3K',   price: 1599, duration: '1 hr 15 mins' },
+  { id: 'ms-head',       tab: 'massage',  name: 'Head massage',                       rating: 4.90, reviews: '28K',  price: 219, options: 2 },
+  { id: 'ms-hns',        tab: 'massage',  name: 'Head, neck & shoulder massage',      rating: 4.86, reviews: '18K',  price: 449, duration: '40 mins' },
+];
+
+function PackageServiceScreen({ onNav, data }) {
+  const { useState } = React;
+  const cat = data || SALON_ROYALE;
+  const [tab, setTab] = useState('packages');
+  const [cart, setCart] = useState({});
+
+  function getQty(id) { return cart[id] || 0; }
+  function setQty(id, n) { setCart(prev => { if (n <= 0) { const c = { ...prev }; delete c[id]; return c; } return { ...prev, [id]: n }; }); }
+
+  const allEntries = { ...Object.fromEntries(SALON_PACKAGES.map(p => [p.id, p])), ...Object.fromEntries(SALON_ITEMS.map(i => [i.id, i])) };
+  const cartIds = Object.keys(cart);
+  const cartCount = cartIds.reduce((s, id) => s + cart[id], 0);
+  const cartTotal = cartIds.reduce((s, id) => s + cart[id] * (allEntries[id]?.price || 0), 0);
+  const tabItems = SALON_ITEMS.filter(it => it.tab === tab);
+  const activeTabLabel = cat.tabs.find(t => t.id === tab)?.label;
+
+  return (
+    <div style={{ height: '100%', position: 'relative', background: ZEP.bg, overflow: 'hidden', fontFamily: FONT, display: 'flex', flexDirection: 'column' }}>
+      <CatListHeader title={cat.name} rating={cat.rating} bookings={cat.bookings} eta={cat.slot} onBack={() => onNav('home')} />
+
+      <div style={{ display: 'flex', gap: 22, overflowX: 'auto', padding: '14px 16px', background: ZEP.surface, borderBottom: `1px solid ${ZEP.divider}`, WebkitOverflowScrolling: 'touch', flexShrink: 0 }}>
+        {cat.tabs.map(t => {
+          const active = t.id === tab;
+          return (
+            <div key={t.id} onClick={() => setTab(t.id)} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, flexShrink: 0, cursor: 'pointer', minWidth: 56 }}>
+              <div style={{ width: 48, height: 48, borderRadius: 14, background: active ? ZEP.primary : ZEP.bg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <LIcon name={t.icon} size={20} color={active ? '#fff' : ZEP.primary} />
+              </div>
+              <span style={{ fontSize: 10.5, fontWeight: 600, color: active ? ZEP.text : ZEP.textSec, fontFamily: FONT, textAlign: 'center' }}>{t.label}</span>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="scrolly" style={{ flex: 1, overflowY: 'auto', padding: '16px 16px 150px' }}>
+        {tab === 'packages' ? (
+          <React.Fragment>
+            <div style={{ fontSize: 16, fontWeight: 800, color: ZEP.text, fontFamily: FONT, marginBottom: 10 }}>Packages</div>
+            {SALON_PACKAGES.map(pkg => (
+              <PackageCard key={pkg.id} pkg={pkg} qty={getQty(pkg.id)} onAdd={() => setQty(pkg.id, 1)} onInc={() => setQty(pkg.id, getQty(pkg.id) + 1)} onDec={() => setQty(pkg.id, getQty(pkg.id) - 1)} />
+            ))}
+          </React.Fragment>
+        ) : (
+          <React.Fragment>
+            <div style={{ fontSize: 16, fontWeight: 800, color: ZEP.text, fontFamily: FONT, marginBottom: 4 }}>{activeTabLabel}</div>
+            {tabItems.map(it => (
+              <CatItemCard key={it.id} item={it} qty={getQty(it.id)} onAdd={() => setQty(it.id, 1)} onInc={() => setQty(it.id, getQty(it.id) + 1)} onDec={() => setQty(it.id, getQty(it.id) - 1)} onViewDetails={() => {}} />
+            ))}
+          </React.Fragment>
+        )}
+      </div>
+
+      {cartCount > 0 && (
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: ZEP.surface, borderTop: `1px solid ${ZEP.divider}`, padding: '10px 16px 16px', boxShadow: '0 -4px 20px rgba(0,0,0,0.10)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <div style={{ fontSize: 12, color: ZEP.textSec, fontFamily: FONT }}>{cartCount} item{cartCount > 1 ? 's' : ''} added</div>
+            <div style={{ fontSize: 16, fontWeight: 800, color: ZEP.text, fontFamily: FONT }}>{fmtINR(cartTotal)}</div>
+          </div>
+          <button onClick={() => onNav('cart', { categoryName: cat.name, backScreen: 'servicePackage', items: cartIds.map(id => ({ ...allEntries[id], qty: cart[id] })) })}
+            style={{ padding: '13px 28px', borderRadius: 9999, border: 'none', background: ZEP.primary, color: '#fff', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: FONT }}>
+            View cart
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -4143,6 +4700,8 @@ const CHIP_GROUPS = [
   null,
   [['serviceHourly','Service · Hourly'], ['serviceFixed','Service · Fixed'], ['serviceProject','Service · Project']],
   null,
+  [['categoryListing','Category · Plumber'], ['servicePackage','Package · Salon Royale'], ['cart','Cart']],
+  null,
   [['checkout','Checkout · Hourly'], ['checkoutV2','Checkout · Fixed'], ['checkoutProject','Checkout · Project']],
   null,
   [['payment','Payment'], ['confirmation','Confirmation']],
@@ -4199,10 +4758,13 @@ function App() {
       case 'serviceHourly':  return <ServiceHourlyScreen {...p} />;
       case 'serviceFixed':   return <ServiceFixedScreen {...p} />;
       case 'serviceProject': return <ServiceProjectScreen {...p} />;
+      case 'categoryListing': return <CategoryListingScreen {...p} data={navData} />;
+      case 'servicePackage': return <PackageServiceScreen {...p} data={navData} />;
+      case 'cart':           return <CartScreen {...p} data={navData} />;
       case 'checkout':      return <CheckoutScreen   {...p} data={navData || CHECKOUT_MOCK} />;
       case 'checkoutV2':    return <CheckoutV2Screen {...p} data={navData || CHECKOUT_V2_MOCK} />;
       case 'checkoutProject': return <CheckoutProjectScreen {...p} data={navData || {}} />;
-      case 'payment':       return <PaymentScreen {...p} />;
+      case 'payment':       return <PaymentScreen {...p} data={navData} />;
       case 'confirmation':  return <ConfirmationScreen {...p} />;
       case 'bookings':      return <BookingsScreen {...p} />;
       case 'orderDetail':   return <OrderDetailScreen {...p} tweakStep={Number(t.orderStep)} />;
