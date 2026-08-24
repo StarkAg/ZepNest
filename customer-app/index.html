@@ -470,10 +470,9 @@ function PaymentScreen({ onNav, data }) {
   const [billOpen, setBill] = React.useState(false);
   const [upiId, setUpiId]   = React.useState('');
 
-  const hours = 2, rate = 299;
-  const itemTotal = rate * hours;
-  const gst       = Math.round(itemTotal * 0.18);
-  const total     = itemTotal + gst;
+  const itemTotal = (data && data.itemTotal) || 0;
+  const gst       = (data && data.gst) != null ? data.gst : Math.round(itemTotal * 0.18);
+  const total     = (data && data.total) != null ? data.total : itemTotal + gst;
 
   const upiApps = [
     { id:'gpay',    name:'GPay',    bg:'#1A73E8', fg:'#fff', label:'G',  fSize:18 },
@@ -3421,7 +3420,7 @@ function CheckoutScreen({ data = {}, onNav, onBack }) {
           </div>
           <div style={{ display: 'flex', gap: 8, flex: 1 }}>
             <button style={{ flex: 1, padding: '12px 0', borderRadius: 9999, border: `1.5px solid ${ZEPCOLORS.border}`, background: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: FONT }}>Pay After Service</button>
-            <button onClick={() => onNav && onNav('payment', { backTo: 'checkout' })} style={{ flex: 1, padding: '12px 0', borderRadius: 9999, border: 'none', background: ZEPCOLORS.primary, color: '#fff', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: FONT }}>Proceed to Pay</button>
+            <button onClick={() => onNav && onNav('payment', { backTo: 'checkout', itemTotal: subtotal, gst, total })} style={{ flex: 1, padding: '12px 0', borderRadius: 9999, border: 'none', background: ZEPCOLORS.primary, color: '#fff', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: FONT }}>Proceed to Pay</button>
           </div>
         </div>
       </div>
@@ -3584,8 +3583,11 @@ function CheckoutV2Screen({ data = {}, onNav, onBack }) {
             <div style={{ fontSize: 20, fontWeight: 800, color: ZEPCOLORS.text, fontFamily: FONT }}>{fmt(total)}</div>
           </div>
           <div style={{ display: 'flex', gap: 8, flex: 1 }}>
-            <button style={{ flex: 1, padding: '12px 0', borderRadius: 9999, border: `1.5px solid ${ZEPCOLORS.border}`, background: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: FONT }}>Pay After Service</button>
-            <button onClick={() => onNav && onNav('payment', { backTo: 'checkoutV2' })} style={{ flex: 1, padding: '12px 0', borderRadius: 9999, border: 'none', background: ZEPCOLORS.primary, color: '#fff', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: FONT }}>Proceed to Pay</button>
+            <button disabled={cartItems.length === 0} style={{ flex: 1, padding: '12px 0', borderRadius: 9999, border: `1.5px solid ${ZEPCOLORS.border}`, background: '#fff', fontSize: 13, fontWeight: 600, cursor: cartItems.length === 0 ? 'default' : 'pointer', opacity: cartItems.length === 0 ? 0.5 : 1, fontFamily: FONT }}>Pay After Service</button>
+            <button
+              disabled={cartItems.length === 0}
+              onClick={() => onNav && onNav('payment', { backTo: 'checkoutV2', itemTotal, gst, total })}
+              style={{ flex: 1, padding: '12px 0', borderRadius: 9999, border: 'none', background: ZEPCOLORS.primary, color: '#fff', fontSize: 13, fontWeight: 700, cursor: cartItems.length === 0 ? 'default' : 'pointer', opacity: cartItems.length === 0 ? 0.5 : 1, fontFamily: FONT }}>Proceed to Pay</button>
           </div>
         </div>
       </div>
