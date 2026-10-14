@@ -1,0 +1,35 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "zepnest",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd customer-app && python3 -m http.server 8000"],
+      "port": 8000
+    },
+    {
+      "name": "vendor-app",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd vendor-app && npm run web"],
+      "port": 8081
+    },
+    {
+      "name": "real-website",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd /private/tmp/claude-501/-Users-mrstark-Desktop-Code-PlayGround-ZepNest/ec24b674-c318-4218-a677-5fbb71b7169b/scratchpad/repo-check/Zepnest-Website && npm run dev"],
+      "port": 3000
+    },
+    {
+      "name": "real-vendor-app",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd /private/tmp/claude-501/-Users-mrstark-Desktop-Code-PlayGround-ZepNest/ec24b674-c318-4218-a677-5fbb71b7169b/scratchpad/repo-check/vendor-app && npm run web -- --port 8090"],
+      "port": 8090
+    },
+    {
+      "name": "real-lk-app",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd /private/tmp/claude-501/-Users-mrstark-Desktop-Code-PlayGround-ZepNest/ec24b674-c318-4218-a677-5fbb71b7169b/scratchpad/repo-check/lk-app && npm run web -- --port 8091"],
+      "port": 8091
+    }
+  ]
+}

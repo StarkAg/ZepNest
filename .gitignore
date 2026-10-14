@@ -16,3 +16,5 @@ node_modules/
 # Local reference material and duplicate archive
 IMG_*.PNG
 vendor-app-develop.zip
+
+archive/lk-app/

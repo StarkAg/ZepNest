@@ -1,0 +1,12 @@
+{
+  "name": "zepnest-v2",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "dev": "npm run dev --workspace=apps/customer",
+    "build:web": "npm run build:web --workspace=apps/customer",
+    "build:app": "npm run build:app --workspace=apps/customer",
+    "sync": "npm run sync --workspace=apps/customer"
+  }
+}

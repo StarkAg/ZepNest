@@ -1,0 +1,57 @@
+@import 'tailwindcss';
+
+/* Design tokens lifted verbatim from customer-app/index.html (const ZEP).
+   Single source of truth - do not hard-code hexes in components. */
+@theme {
+  --color-primary: #1c1c1e;
+  --color-primary-dark: #000000;
+  --color-primary-light: #f0f0f0;
+  --color-primary-mid: #e2e2e2;
+
+  --color-accent: #e88b1a;
+  --color-accent-light: #fff7ed;
+
+  --color-bg: #f5f5f5;
+  --color-surface: #ffffff;
+  --color-border: #e0e0e0;
+  --color-divider: #eeeeee;
+  --color-input-fill: #f0f0f0;
+
+  --color-text: #1a1a1a;
+  --color-text-sec: #757575;
+  --color-text-hint: #9e9e9e;
+
+  --color-success: #2e7d32;
+  --color-success-bg: #e8f5e9;
+  --color-warning: #b07000;
+  --color-warning-bg: #fff3cd;
+  --color-error: #c62828;
+  --color-error-bg: #ffebee;
+
+  --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html,
+  body {
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    /* Native-feeling: kill the tap flash and text selection on chrome */
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Respect device notches once running inside Capacitor. */
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
